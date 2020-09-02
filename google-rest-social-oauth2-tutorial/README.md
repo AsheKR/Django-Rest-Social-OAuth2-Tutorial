@@ -8,7 +8,7 @@ https://console.cloud.google.com/apis/credentials
 
 위 페이지로 가서 OAuth 2.0 키를 발급한다.
 
-1. + CREATE CREDENTIALS -> OAuth client ID
+1. \+ CREATE CREDENTIALS -> OAuth client ID
 
 2. 정보 입력
 
