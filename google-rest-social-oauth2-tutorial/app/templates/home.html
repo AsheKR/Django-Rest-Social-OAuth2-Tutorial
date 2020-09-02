@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Login With Javascript</title>
+    <meta name="google-signin-client_id" content="781418613318-2k5esl0a8vi48dgmd8ih23j9ipvbi4fe.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dar"></div>
+</body>
+<script>
+    function onSignIn(googleUser) {
+        console.log(googleUser);
+        console.log('sign In');
+        let accessToken = googleUser.getAuthResponse().access_token;
+
+        const data = {
+            grant_type: 'convert_token',
+            client_id: 'xltrGBGtOFTcwkJuAypOWNtdKDSk8NUwM4t7543q',
+            client_secret: 'esjDTLbltSpVA2CG2mzJt9ZdJKizT8FtMPP2kAshBcJAPFLS0OdwXrb08ydIERL6hp8l1yTLEWerMXlry09pa7BH1psssguaM6Qr08axhSPw5e4mQWHl2YR8y7OtmPH5',
+            backend: 'google-oauth2',
+            token: accessToken,
+        };
+
+        axios.post('/auth/convert-token', data)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+</script>
+</html>
