@@ -51,6 +51,8 @@ AUTHENTICATION_BACKENDS = (
 )
 ```
 
-## Backends
+## Sample Backends
 
-[Google](google-rest-social-oauth2-tutorial/README.md)
+각 Social Login 별로 Tutorial 을 작성해 놓은 문서입니다.
+
+- [Google](google-rest-social-oauth2-tutorial/README.md)
