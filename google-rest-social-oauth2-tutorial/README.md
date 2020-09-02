@@ -7,7 +7,7 @@
 https://console.cloud.google.com/apis/credentials
 
 위 페이지로 가서 OAuth 2.0 키를 발급한다.
-
+```text
 1. \+ CREATE CREDENTIALS -> OAuth client ID
 
 2. 정보 입력
@@ -16,9 +16,18 @@ Application type -> Web Application
 
 Name -> 자유롭게
 
-Authorized Javascript origins -> 어느 도메인에서 로그인을 허용할지 ( 주의점이 있다면 127.0.0.1 을 사용하면 에러가 납니다. 대신 localhost 를 사용해주세요 )
+아래 도메인을 입력할 때는 주의점이 있습니다!
 
-Authorized redirect URIs -> 로그인 이후 redirect 되는 URI 를 어떤것만 허용할지 ( 주의점이 있다면 127.0.0.1 을 사용하면 에러가 납니다. 대신 localhost 를 사용해주세요 )
+1. 127.0.0.1 을 사용하면 에러가 납니다. 대신 localhost 를 사용해주세요.
+2. Google 은 http 프로토콜을 지원하지 않는걸로 알고 있습니다. https 를 사용해주세요. 
+    - django 의 runserver 는 http 로 동작하기 때문에, django-runsslserver 를 받은 후 runsslserver 로 실행해야합니다!
+
+ex ) https://localhost:8000
+
+Authorized Javascript origins -> 어느 도메인에서 로그인을 허용할지 
+
+Authorized redirect URIs -> 로그인 이후 redirect 되는 URI 를 어떤것만 허용할지
+```
 
 ### 2. Social Login 을 사용하기 위한 설정 추가
 
@@ -40,6 +49,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 
 ### 3. Application 설정
 
+```text
 1. Admin 페이지로 이동
 
 2. DJANGO OAUTH TOOLKIT -> Applications 의 + Add 클릭
@@ -55,14 +65,11 @@ Name -> 자유롭게
 4. Save
 
 5. 이후에 ClientId, ClientSecret 을 프론트분에게 알려드립니다.
+```
 
 ### 4. 프론트에서는 어떻게 보내야하나?
 
 `app/templates/home.html` 에 더 자세한 예가 나와있습니다.
-
-1. 프론트 에서 Google Login 시도
-
-2. 프론트의 Google Login 이후 backend 의 login 으로 보내야합니다.
 
 ```javascript
 // 1. Social Login 으로 받은 정보 중 AccessToken 을 가져옴
