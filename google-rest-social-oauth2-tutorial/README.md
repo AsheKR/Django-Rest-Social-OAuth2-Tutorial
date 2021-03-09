@@ -6,74 +6,95 @@
 
 https://console.cloud.google.com/apis/credentials
 
-위 페이지로 가서 OAuth 2.0 키를 발급한다.
-```text
-1. \+ CREATE CREDENTIALS -> OAuth client ID 클릭
+위 페이지로 가서 OAuth 2.0 키를 발급해야한다.
 
-2. 정보 입력
+`+ 사용자 인증 정보 만들기` -> `OAuth 클라이언트 ID` 순서로 누른다.
 
-Application type -> Web Application
+[사진1]
 
-Name -> 자유롭게
+만약 OAuth 를 프로젝트에서 처음 발급한다면 반드시 동의화면을 구성해야므로 `구성하기` 버튼을 누른다.
 
-아래 도메인을 입력할 때는 주의점이 있습니다!
+[사진 2]
 
-1. 127.0.0.1 을 사용하면 에러가 납니다. 대신 localhost 를 사용해주세요.
-2. Google 은 http 프로토콜을 지원하지 않는걸로 알고 있습니다. https 를 사용해주세요. 
-    - django 의 runserver 는 http 로 동작하기 때문에, django-runsslserver 를 받은 후 runsslserver 로 실행해야합니다!
+동의 화면 구성인데, 외부를 누른다. ( 내부는 어차피 안눌린다. ) 이후 `만들기` 버튼을 누른다.
 
-ex ) https://localhost:8000
+[사진 3]
 
-Authorized Javascript origins -> 어느 도메인에서 로그인을 허용할지 
+앱 정보를 입력하는데 원하는 대로 입력한다. 필수값만 입력해주면 된다. `앱이름`, `사용자 지정 이메일`
 
-Authorized redirect URIs -> 로그인 이후 redirect 되는 URI 를 어떤것만 허용할지
-```
+[사진 4]
+
+아래로 내린 후 `개발자 연락처 정보` 를 입력한 후 `저장 후 계속` 버튼을 누른다.
+
+[사진 5]
+
+범위를 지정하는 것이 있는데 딱히 지정하지 않고 `저장 후 계속` 버튼을 누른다.
+
+[사진 6]
+
+동의화면 구성의 마지막인 테스트사용자를 추가흔ㄴ 것이 있는데, 아무것도 하지 않고 `저장 후 계속` 버튼을 누른다.
+
+[사진 7]
+
+다시, 아래 링크로 돌아와서 `+ 사용자 인증 정보 만들기` -> `OAuth 클라이언트 ID` 순서로 누른다.
+
+https://console.cloud.google.com/apis/credentials
+
+[사진 8]
+
+필수 값을 입력하고, 로컬에서 테스트하기 위해 리다이렉션 링크를 `https://localhost:8000` 을 넣어준다.
+
+[사진 9]
+
+`만들기` 버튼을 누르면 `클라이언트 ID`, `클라이언트 보안 비밀번호`가 발급된다.
+
+[사진 10]
+
+위에서 발급한 `클라이언트 ID`, `클라이언트 보안 비밀번호` 가 Django 세팅에 필요한 값들이다. 잘 복붙해놓자.
+
 
 ### 2. Social Login 을 사용하기 위한 설정 추가
 
-Python social Auth 문서의 Backend 에 내가 사용할 Backend 의 문서를 보게 되면 어떤 설정을 더 추가해야하는 나옵니다.
+Python social Auth 문서의 Backend 에 내가 사용할 Backend 의 문서를 보게 되면 어떤 설정을 더 추가할 수 있는지 나온다.
 
 https://python-social-auth.readthedocs.io/en/latest/backends/google.html#google-oauth2
 
 ```python
-# 잊어버렸으면 https://console.cloud.google.com/apis/credentials 로 다시 들어가서 내가 생성한 Oauth2 계정을 수정한 다음 오른쪽에 나타나있는 ClientID, Client Secret 을 가져옵니다.
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "<1 번에서 생성한 Client 의 ClientID>"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "<1 번에서 생성한 Client 의 Secret>"
-
-# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "<1 번에서 생성한 클라이언트 ID>"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "<1 번에서 생성한 클라이언트 보안 비밀번호>"
 ```
 
-### 3. Application 설정
+### 3. Django Admin 에서 OAuth Application 설정
 
-```text
-1. Admin 페이지로 이동
+프론트에서 social 인증을 받고나서 backend 로 한번 더 인증을 받아야하는데 그에 대한 설정이다.
 
-2. DJANGO OAUTH TOOLKIT -> Applications 의 + Add 클릭
+django admin 페이지를 들어간 후 `Applications` 로 들어간다.
 
-3. 정보 입력
+[사진 1]
 
-Client type -> Confidential
+이후 `Application +` 버튼을 누른다.
 
-Authorization grant type -> Authorization code
+[사진 2]
 
-Name -> 자유롭게
+필수인 부분을 입력하고 `SAVE` 를 누른다.
 
-4. Save
+- `Redirect urls`: 인증 완료 이후 Redirect 될 URL ( django rest framework 를 쓴다면 아무거나 상관없다. )
+- `Client type`: `Confidential`
+- `Application grant type`: `Authorization code`
 
-5. 이후에 ClientId, ClientSecret 을 프론트분에게 알려드립니다.
-```
+[사진 3]
 
-### 4. 프론트에서는 어떻게 보내야하나?
+다시 위의 사진에서, `client_id`, `client_secret` 이 프론트에서 사용해야 할 키 값들이다.
 
-`app/templates/home.html` 에 더 자세한 예가 나와있습니다.
+[사진 4]
+
+### 4. 프론트에서는 어떻게 사용하나?
+
+`app/templates/home.html` 에서 더 자세한 예가 나와있다.
 
 ```javascript
 // 1. Social Login 으로 받은 정보 중 AccessToken 을 가져옴
-let accessToken = googleUser.getAuthResponse().access_token;
+let accessToken = googleUser.getAuthResponse(true).access_token;
 
 // 2. 보낼 형태를 맞춤
 const data = {

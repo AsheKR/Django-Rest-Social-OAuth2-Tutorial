@@ -13,7 +13,7 @@
     function onSignIn(googleUser) {
         console.log(googleUser);
         console.log('sign In');
-        let accessToken = googleUser.getAuthResponse().access_token;
+        let accessToken = googleUser.getAuthResponse(true).access_token;
 
         const data = {
             grant_type: 'convert_token',
